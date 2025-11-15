@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sl">
 <head>
 <meta charset="UTF-8">
 <title>Hacker Page</title>
@@ -9,14 +9,73 @@
         margin: 0;
         overflow: hidden;
         font-family: monospace;
+        color: #0F0;
     }
+
     canvas {
         display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    /* Statično besedilo na sredini */
+    #textBox {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 90%;
+        max-width: 900px;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+        color: #00ff00;
+        font-size: 28px;
+        line-height: 1.6;
+        text-shadow: 0 0 8px #00ff00;
+        padding: 20px;
+    }
+
+    /* Gumb */
+    #btn {
+        margin-top: 25px;
+        font-size: 24px;
+        padding: 14px 32px;
+        background: #00ff00;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: monospace;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 0 12px #00ff00;
+    }
+
+    #btn:hover {
+        background: #00cc00;
+        box-shadow: 0 0 18px #00ff00;
     }
 </style>
 </head>
 <body>
+
 <canvas id="matrix"></canvas>
+
+<div id="textBox">
+    Ste pravkar skenirali naključno QR kodo z ulice?<br><br>
+
+    Če bi bila ta koda zlonamerna, bi lahko ravno zdaj na svoj telefon<br>
+    prenésli virus ali razkrili svoje podatke.<br><br>
+
+    V knjigi <b>Fizična in digitalna varnost</b> izveste, kako se tovrstnim pastem izogniti.<br><br>
+
+    <a id="btn" href="https://varnostni-nacrt.si/" target="_blank">
+        Obišči stran
+    </a>
+</div>
+
 <script>
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
@@ -33,52 +92,5 @@ const fontSize = 16;
 let columns = Math.floor(canvas.width / fontSize);
 let drops = Array(columns).fill(1);
 
-const staticText = [
-    "Ste pravkar skenirali naključno QR kodo z ulice?",
-    "",
-    "Če bi bila ta koda zlonamerna, bi lahko ravno zdaj na svoj telefon",
-    "prenésli virus ali razkrili svoje podatke.",
-    "",
-    "V knjigi Fizična in digitalna varnost izveste, kako se tovrstnim pastem izogniti.",
-    "",
-    "https://varnostni-nacrt.si/"
-];
-
 function draw() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "#0F0";
-    ctx.font = fontSize + "px monospace";
-
-    for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) drops[i] = 0;
-        drops[i]++;
-    }
-
-    // static text
-    ctx.fillStyle = "#0F0";
-    ctx.font = "24px monospace";
-    ctx.textAlign = "center";
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const lineHeight = 32;
-    const startY = centerY - (staticText.length / 2) * lineHeight;
-    staticText.forEach((line, i) => {
-        ctx.fillText(line, centerX, startY + i * lineHeight);
-    });
-}
-
-// Posodobimo število stolpcev, če se spremeni širina
-setInterval(() => {
-    columns = Math.floor(canvas.width / fontSize);
-    if (drops.length !== columns) {
-        drops = Array(columns).fill(1);
-    }
-    draw();
-}, 33);
-</script>
-</body>
-</html>
+    ctx.fillStyle = "rgba(0
