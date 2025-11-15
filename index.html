@@ -1,72 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hacker Page</title>
+<style>
+    body {
+        background: black;
+        margin: 0;
+        overflow: hidden;
+        font-family: monospace;
+    }
+    canvas {
+        display: block;
+    }
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
 <script>
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
 
-    canvas.height = window.innerHeight;
+function resizeCanvas() {
     canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
 
-    const letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const drops = [];
+const letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const fontSize = 16;
+let columns = Math.floor(canvas.width / fontSize);
+let drops = Array(columns).fill(1);
 
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
+const staticText = [
+    "Ste pravkar skenirali naključno QR kodo z ulice?",
+    "",
+    "Če bi bila ta koda zlonamerna, bi lahko ravno zdaj na svoj telefon",
+    "prenésli virus ali razkrili svoje podatke.",
+    "",
+    "V knjigi Fizična in digitalna varnost izveste, kako se tovrstnim pastem izogniti.",
+    "",
+    "https://varnostni-nacrt.si/"
+];
 
-    for (let i = 0; i < columns; i++) {
-        drops[i] = 1;
+function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0F0";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) drops[i] = 0;
+        drops[i]++;
     }
 
-    // --- tvoje besedilo ---
-    const staticText = [
-        "Ste pravkar skenirali naključno QR kodo z ulice?",
-        "",
-        "Če bi bila ta koda zlonamerna, bi lahko ravno zdaj na svoj telefon",
-        "prenésli virus ali razkrili svoje podatke.",
-        "",
-        "V knjigi Fizična in digitalna varnost izveste, kako se tovrstnim pastem izogniti.",
-        "",
-        "https://varnostni-nacrt.si/"
-    ];
-
-    function draw() {
-        // Matrix efekt
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#0F0";
-        ctx.font = fontSize + "px monospace";
-
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters.charAt(Math.floor(Math.random() * letters.length));
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) {
-                drops[i] = 0;
-            }
-
-            drops[i]++;
-        }
-
-        // --- statično besedilo na sredini ---
-        ctx.fillStyle = "#0F0";
-        ctx.font = "24px monospace";
-        ctx.textAlign = "center";
-
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-
-        const lineHeight = 32;
-        const startY = centerY - (staticText.length / 2) * lineHeight;
-
-        staticText.forEach((line, i) => {
-            ctx.fillText(line, centerX, startY + i * lineHeight);
-        });
-    }
-
-    setInterval(draw, 33);
-
-    // Responsivnost ob resize
-    window.addEventListener("resize", () => {
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth;
+    // static text
+    ctx.fillStyle = "#0F0";
+    ctx.font = "24px monospace";
+    ctx.textAlign = "center";
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const lineHeight = 32;
+    const startY = centerY - (staticText.length / 2) * lineHeight;
+    staticText.forEach((line, i) => {
+        ctx.fillText(line, centerX, startY + i * lineHeight);
     });
+}
+
+// Posodobimo število stolpcev, če se spremeni širina
+setInterval(() => {
+    columns = Math.floor(canvas.width / fontSize);
+    if (drops.length !== columns) {
+        drops = Array(columns).fill(1);
+    }
+    draw();
+}, 33);
 </script>
+</body>
+</html>
