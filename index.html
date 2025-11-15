@@ -11,11 +11,11 @@ body {
     font-family: monospace;
 }
 canvas {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 0;
-    display: block;
 }
 #textBox {
     position: fixed;
@@ -57,8 +57,8 @@ canvas {
 <div id="textBox">
     Ste pravkar skenirali naključno QR kodo z ulice?<br><br>
     Če bi bila ta koda zlonamerna, bi lahko ravno zdaj na svoj telefon<br>
-    prenesli virus ali razkrili svoje podatke.<br><br>
-    V knjigi <b>FIZIČNA IN DIGITALNA VARNOST</b> izveste, kako se tovrstnim pastem izogniti.<br><br>
+    prenésli virus ali razkrili svoje podatke.<br><br>
+    V knjigi <b>Fizična in digitalna varnost</b> izveste, kako se tovrstnim pastem izogniti.<br><br>
     <a id="btn" href="https://varnostni-nacrt.si/" target="_blank">Obišči stran</a>
 </div>
 
@@ -82,8 +82,29 @@ let columns = Math.floor(width / fontSize);
 let drops = Array(columns).fill(1);
 
 function drawMatrix() {
-    // rahlo temno prekrivanje, da se pojavijo "sledi"
+    // Ozadje za "trail"
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
     ctx.fillRect(0, 0, width, height);
 
-    ctx
+    ctx.fillStyle = "#0F0";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+        const char = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+        drops[i]++;
+        if (drops[i] * fontSize > height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+    }
+
+    requestAnimationFrame(drawMatrix); // bolj stabilno kot setInterval
+}
+
+// Zaženi animacijo
+drawMatrix();
+</script>
+
+</body>
+</html>
