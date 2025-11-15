@@ -1,21 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Hacker Page</title>
-<style>
-    body {
-        background: black;
-        overflow: hidden;
-        margin: 0;
-    }
-    canvas {
-        display: block;
-    }
-</style>
-</head>
-<body>
-<canvas id="matrix"></canvas>
 <script>
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
@@ -33,7 +15,20 @@
         drops[i] = 1;
     }
 
+    // --- tvoje besedilo ---
+    const staticText = [
+        "Ste pravkar skenirali naključno QR kodo z ulice?",
+        "",
+        "Če bi bila ta koda zlonamerna, bi lahko ravno zdaj na svoj telefon",
+        "prenésli virus ali razkrili svoje podatke.",
+        "",
+        "V knjigi Fizična in digitalna varnost izveste, kako se tovrstnim pastem izogniti.",
+        "",
+        "https://varnostni-nacrt.si/"
+    ];
+
     function draw() {
+        // Matrix efekt
         ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -50,9 +45,28 @@
 
             drops[i]++;
         }
+
+        // --- statično besedilo na sredini ---
+        ctx.fillStyle = "#0F0";
+        ctx.font = "24px monospace";
+        ctx.textAlign = "center";
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        const lineHeight = 32;
+        const startY = centerY - (staticText.length / 2) * lineHeight;
+
+        staticText.forEach((line, i) => {
+            ctx.fillText(line, centerX, startY + i * lineHeight);
+        });
     }
 
     setInterval(draw, 33);
+
+    // Responsivnost ob resize
+    window.addEventListener("resize", () => {
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+    });
 </script>
-</body>
-</html>
